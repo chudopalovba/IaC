@@ -1,0 +1,9 @@
+[PROD]
+client01 inv_user=client1 owner=Petya
+
+[STAGING]
+client02 inv_user=client2 owner=Vasya
+
+[ALL_LINUX:children]
+PROD
+STAGING

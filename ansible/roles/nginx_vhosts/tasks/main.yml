@@ -1,0 +1,63 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for nginx_vhosts
+
+
+- block: #==== Block for Debian ====
+    - name: Install Nginx on Debian
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+      
+      notify: Start Nginx service on 
+    
+
+  when: ansible_os_family == "Debian"
+
+- block: #==== Block for RedHat ====
+    - name: Install Nginx on RedHat
+      ansible.builtin.yum:
+        name: nginx
+        state: latest
+      
+      notify: Start Nginx service on
+
+
+    - name: Enable HTTP connection
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+      notify: Reload firewalld
+  
+  when: ansible_os_family == "RedHat"
+
+
+
+- name: Make dirs for virtual hosts
+  ansible.builtin.file:
+    path: "{{ default_path_for_deb }}/{{ item }}/html"
+    state: directory
+    mode: '0755'
+  loop: "{{ domains }}"
+
+- name: Make start page for vh
+  ansible.builtin.template:
+    src: index.j2
+    dest: "{{ default_path_for_deb }}/{{ item }}/index.html"
+    mode: '0755'
+  loop: "{{ domains }}"
+  vars:
+    domain: "{{ item }}"     
+
+- name: Deploy nginx config
+  ansible.builtin.template:
+    src: vhost.conf.j2
+    dest: "{{ default_conf_path }}/{{ item }}.conf"
+  loop: "{{ domains }}"
+  vars:
+    domain: "{{ item }}"
+      
+  notify: Reload Nginx
+
