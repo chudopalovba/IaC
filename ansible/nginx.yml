@@ -1,7 +1,0 @@
----
-- name: Install nginx and create vhosts
-  hosts: all
-  become: yes
-  roles:
-    - { role: nginx_vhosts }
-    

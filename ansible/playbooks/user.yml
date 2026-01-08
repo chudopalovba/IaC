@@ -1,0 +1,26 @@
+- name: Плейбук для работы с переменными
+  vars_files: ./../vars/users.yml
+  hosts: all
+  become: true
+  tasks:
+    - name: Создаем пользователя
+      ansible.builtin.user:
+        name: "{{ username }}"
+        home: "{{ home_dir }}"
+
+    - name: Собираем информацию о домашней директории
+      ansible.builtin.stat:
+        path: "{{ home_dir }}"
+      register: home_info
+
+    - name: Вывод инфомации
+      ansible.builtin.debug:
+        msg: "Директория существует: {{ home_info.stat.exists }}"
+    
+    - name: Создание приветствия
+      ansible.builtin.set_fact:
+        greeting: " {{ username }} твой дом {{ home_dir }}"
+
+    - name: Вывод сообщения
+      ansible.builtin.debug:
+        msg: "{{ greeting }}"

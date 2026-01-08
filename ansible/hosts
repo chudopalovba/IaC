@@ -1,9 +1,6 @@
-[PROD]
-client01 inv_user=client1 owner=Petya
+[webservers]
+web1 ansible_host=192.168.0.103 ansible_user=root
+web2 ansible_host=192.168.0.104 ansible_user=root
 
-[STAGING]
-client02 inv_user=client2 owner=Vasya
-
-[ALL_LINUX:children]
-PROD
-STAGING
+[dbservers]
+db1 ansible_host=192.168.0.110 ansible_user=root

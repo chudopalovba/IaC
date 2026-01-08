@@ -1,0 +1,22 @@
+- name: Настройка веб-сервера
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Установка nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Создание стартовой страницы
+      ansible.builtin.copy:
+        content: "<h1>Hello from Ansible</h1>"
+        dest: "/var/www/html/index.html"
+        mode: "0644"
+
+    - name: Убедимся, что nginx запущен
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+        
+    
