@@ -1,0 +1,3 @@
+- name: Таска с include
+  ansible.builtin.debug:
+    msg: "ansible_connection"

@@ -1,0 +1,30 @@
+- name: Плейбук с when
+  gather_facts: true
+  hosts: all
+  become: true
+  vars:
+    create_file: true
+  tasks:
+
+    - name: Установка htop
+      ansible.builtin.apt:
+        name: htop
+        state: latest
+      when: ansible_os_family == "Debian"
+
+    - name: Создание файла
+      ansible.builtin.file:
+        path: /tmp/test.txt
+        state: touch
+      when: create_file
+
+    - name: Сборка инфо
+      ansible.builtin.stat:
+        path: /tmp/test.txt
+      register: file_check
+
+    - name: Удаление файла
+      ansible.builtin.file:
+        path: /tmp/test.txt
+        state: absent
+      when: file_check.stat.exists

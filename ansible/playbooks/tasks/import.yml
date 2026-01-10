@@ -1,0 +1,3 @@
+- name: Таска с import
+  ansible.builtin.debug:
+    msg: "{{ ansible_os_family }}"

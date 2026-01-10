@@ -1,0 +1,28 @@
+- name: Работа с блоками 'block/rescue/alsways'
+  hosts: webservers
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Выполнить действия
+      block:
+        - name: Создаем файл
+          ansible.builtin.file:
+            path: "/tmp/file123.txt"
+            state: touch
+
+        - name: Искусственно создаем ошибку
+          ansible.builtin.shell: "exit 1"
+
+      rescue:
+
+        - name: Удалить файл
+          ansible.builtin.file:
+            path: "/tmp/file123.txt"
+            state: absent
+
+      always:
+      
+        - name: Вывод сообщения
+          ansible.builtin.debug:
+            msg: "Плей завершен"
+     

@@ -1,0 +1,36 @@
+- name: Работа с инструментами обработки ошибок
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+  
+    - name: Таска с rc = 2
+      ansible.builtin.command: "ls /notfound"
+      ignore_errors: true
+      register: command_rc
+
+    - name: Вывод register
+      ansible.builtin.debug:
+        msg: " {{ command_rc }}"
+
+    - name: Таска после ошибки
+      ansible.builtin.debug:
+        msg: "Команда выполнена"
+
+    - name: Ошибочный curl запрос
+      ansible.builtin.shell: "curl -s -o /dev/null -w '%{http_code}' https://example.com/404"
+      register: curl_result
+      failed_when: false
+
+    - name: Вывод кода возврата curl
+      ansible.builtin.debug:
+        msg: "Код возврата {{ curl_result.stdout  }}"
+
+    - name: Выполняем uptime 
+      ansible.builtin.shell: "uptime"
+      register: uptime_res
+      changed_when: false
+      
+    - name: Вывод сообщения
+      ansible.builtin.debug:
+        msg: "Система работает: {{ uptime_res.stdout  }}"

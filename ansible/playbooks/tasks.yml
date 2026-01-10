@@ -1,0 +1,10 @@
+- name: Работа с include_tasks и import_tasks
+  hosts: all
+  gather_facts: true
+  vars:
+    use_setup: true
+  tasks:
+    
+    - import_tasks: tasks/import.yml
+    - include_tasks: tasks/include.yml
+      when: use_setup

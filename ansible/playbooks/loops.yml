@@ -1,0 +1,46 @@
+- name: Работа с циклами
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+
+
+    - name: Установка пакетов для Debina хостов
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - curl 
+        - mc
+      when: ansible_os_family == "Debian"
+      ignore_errors: true
+
+    - name: Установка пакетов для Alma хостов
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - curl 
+        - mc
+      when: ansible_os_family == "RedHat"
+
+    - name: Создание пользователей
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid }}"
+      loop:
+        - { name: "user_101", uid: 1101 }
+        - { name: "user_102", uid: 1102 }
+    
+    - name: Вывод итерации и юзера
+      ansible.builtin.debug:
+        msg: "Итерация №{{ iter_index + 1  }} - юзер {{ item }}"
+      loop:
+        - "user_101"
+        - "user_102"
+      loop_control:
+        index_var: iter_index
+
+
