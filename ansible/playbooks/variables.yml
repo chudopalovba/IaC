@@ -1,0 +1,26 @@
+- name: Работа с переменными
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    deploy_env: "dev"
+  tasks:
+
+    - name: Подгружаем переменные для прода
+      ansible.builtin.include_vars: 
+        file: vars/prod.yml
+        name: env
+      when: deploy_env == "prod"
+
+    - name: Подгружаем переменные для дев
+      ansible.builtin.include_vars: 
+        file: vars/dev.yml
+        name: env
+      when: deploy_env == "dev"
+
+    - name: Вывод информации
+      ansible.builtin.debug:
+        msg: "Разворачиваем {{ env.app_name }} на порту {{ env.app_port }}"
+
+    
+  
