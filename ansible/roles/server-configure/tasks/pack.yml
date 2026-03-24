@@ -1,0 +1,21 @@
+---
+- name: Обновляем кеш пакетов
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Установка базовых пакетов
+  ansible.builtin.apt:
+    name:
+      - curl
+      - unzip
+      - wget
+      - python3
+      - python3-pip
+      - apt-transport-https
+      - ca-certificates
+      - openjdk-21-jdk
+      - dotnet-runtime-8.0
+    state: present
+
+
+

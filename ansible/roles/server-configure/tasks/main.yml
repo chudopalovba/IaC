@@ -1,0 +1,9 @@
+---
+- name: Установка необходимых пакетов
+  import_tasks: pack.yml
+
+- name: Установка nginx
+  import_tasks: nginx.yml
+
+- name: Установка Docker
+  import_tasks: docker.yml

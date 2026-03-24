@@ -1,0 +1,31 @@
+---
+- name: Загрузка GPG-ключа Docker
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /usr/share/keyrings/docker.gpg
+    mode: '0644'
+
+- name: Добавление репозитория Docker
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    filename: docker
+    state: present
+
+- name: Обновление кеша apt
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Установка пакетов Docker
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+
+- name: Добавление пользователя в группу docker
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes

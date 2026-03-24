@@ -1,0 +1,6 @@
+- name: Конфигурируем сервер для деплоя
+  hosts: deploy_server
+  become: yes
+
+  roles:
+    - role: server-configure
