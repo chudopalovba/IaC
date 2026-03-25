@@ -1,0 +1,13 @@
+---
+- name: Создание пользователя (роли) БД
+  community.postgresql.postgresql_user:
+    name: "{{ pg_user_name }}"
+    password: "{{ pg_user_password }}"
+    role_attr_flags: CREATEDB 
+  become_user: postgres
+
+- name: Создание основной базы данных
+  community.postgresql.postgresql_db:
+    name: "{{ pg_db_name }}"
+    owner: "{{ pg_user_name }}"
+  become_user: postgres

@@ -1,0 +1,27 @@
+---
+- name: Поиск конфигурационного файла pg_hba.conf
+  find:
+    paths: /etc/postgresql
+    patterns: "pg_hba.conf"
+    recurse: yes
+  register: pg_hba_file
+
+- name: Настройка listen_addresses (на каких IP слушать)
+  community.postgresql.postgresql_set:
+    name: listen_addresses
+    value: "{{ pg_listen_addresses }}"
+  become_user: postgres
+  notify: restart postgresql
+
+- name: Настройка доступа (pg_hba.conf)
+  community.postgresql.postgresql_pg_hba:
+    dest: "{{ pg_hba_file.files[0].path }}"
+    contype: host
+    databases: all
+    users: all
+    address: "{{ pg_remote_access_ip }}"
+    method: md5
+    create: true
+  become_user: postgres
+  notify: restart postgresql
+  when: pg_hba_file.matched > 0

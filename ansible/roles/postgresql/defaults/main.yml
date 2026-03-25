@@ -1,0 +1,7 @@
+---
+pg_db_name: "app_database"
+pg_user_name: "app_user"
+pg_user_password: "secure_password"
+
+pg_listen_addresses: "localhost"
+pg_remote_access_ip: "127.0.0.1/32"
