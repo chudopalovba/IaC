@@ -1,0 +1,13 @@
+---
+- name: Развертывание базы данных PostgreSQL
+  hosts: deploy_server
+  become: yes
+  
+  roles:
+    - role: postgresql
+      vars:
+        pg_db_name: "my_project_db"
+        pg_user_name: "admin_db"
+        pg_user_password: "12345"
+        pg_listen_addresses: "*"
+        pg_remote_access_ip: "0.0.0.0/0"
